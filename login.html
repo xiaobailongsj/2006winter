@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>用户注册</h1>
+<form action="">
+    <table>
+        <tr>
+            <td>用户名</td>
+            <td><input type="text" name="username" id="username"></td>
+        </tr>
+        <tr>
+            <td>手机号</td>
+            <td><input type="text" name="mobile" id="mobile"></td>
+        </tr>
+        <tr>
+            <td>email</td>
+            <td><input type="text" name="email" id="email"></td>
+        </tr>
+        <tr>
+            <td>密码</td>
+            <td><input type="password" name="pwd" id="pwd"></td>
+        </tr>
+        <tr>
+            <td>确认密码</td>
+            <td><input type="password" name="is_pwd" id="is_pwd"></td>
+        </tr>
+        <tr>
+            <td><button>注册</button></td>
+            <td></td>
+        </tr>
+    </table>
+</form>
+<script>
+<!--   分装ajax函数-->
+    function ajax(p,none){
+        var xhr = new XMLHttpRequest()
+        xhr.onreadystatechange=function () {
+                if(xhr.readyState===4&&xhr.status===200){
+                    var str=JSON.parse(xhr.responseText)
+                    if(str.errno>0){
+                        alert(str.mgs)
+                        none.value=''
+                        none.focus()
+                    }
+                }
+        }
+        xhr.open('get','check.php?data='+p)
+        xhr.send()
+    }
+    document.getElementById('username').addEventListener('blur',function () {
+        if(this.value==''){
+            return
+        }
+        var username = this.value
+        ajax(username,this)
+    })
+document.getElementById('mobile').addEventListener('blur',function () {
+    if(this.value==''){
+        return
+    }
+    var mobile = this.value
+    ajax(mobile,this)
+})
+document.getElementById('email').addEventListener('blur',function () {
+    if(this.value==''){
+        return
+    }
+    var email = this.value
+    ajax(email,this)
+})
+    var f =document.forms[0]
+    f.addEventListener('submit',function (event) {
+        event.preventDefault()
+        var input = f.getElementsByTagName('input')
+        var str='';
+        for (var i=0;i<input.length;i++){
+            if(input[i].getAttribute('name')==''){
+                continue
+            }
+            var k = input[i].getAttribute('name')
+            var v = input[i].value
+            str += k+'='+v+'&'
+        }
+        new_str = str.substring(0,str.length-1)
+        console.log(new_str)
+        var xhr = new XMLHttpRequest()
+        xhr.onreadystatechange=function () {
+            if(xhr.readyState===4&&xhr.status===200){
+                var str1 = JSON.parse(xhr.responseText)
+                console.log(str1)
+                alert(str1.mgs)
+                location.href='a.html'
+            }
+        }
+        xhr.open('post','res.php')
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send(new_str)
+    })
+</script>
+</body>
+</html>
